@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { nanoid } = require("nanoid");
 
 const studentSchema = new mongoose.Schema(
   {
@@ -21,6 +22,7 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: [true, "Student ID is required"],
       unique: true,
+      default: () => nanoid(10),
     },
     className: {
       type: String,
@@ -55,6 +57,11 @@ const studentSchema = new mongoose.Schema(
     },
     additionalInfo: {
       type: String,
+    },
+    createdAt: {
+      type: Date,
+      required: [true, "Date is required"],
+      default: Date.now,
     },
   },
   {
