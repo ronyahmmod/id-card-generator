@@ -74,6 +74,24 @@ const StudentsList = () => {
     );
   };
 
+  const downloadPDF = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/id-cards/generate-id-cards",
+        { selectedStudents: selectedStudents },
+        { responseType: "blob" }
+      );
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "student-id-cards.pdf");
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = filteredStudents.slice(
@@ -116,14 +134,7 @@ const StudentsList = () => {
             placeholder="Full Name"
             className="border p-2 mb-2 w-full"
           />
-          <input
-            type="text"
-            name="studentId"
-            value={editStudent.studentId}
-            onChange={handleEditChange}
-            placeholder="Student ID"
-            className="border p-2 mb-2 w-full"
-          />
+
           <input
             type="text"
             name="category"
@@ -139,6 +150,20 @@ const StudentsList = () => {
             onChange={handleEditChange}
             placeholder="Session"
             className="border p-2 mb-2 w-full"
+          />
+          {editStudent.photo && (
+            <img
+              src={editStudent.photo}
+              alt="Current"
+              className="w-20 h-20 object-cover rounded mb-2"
+            />
+          )}
+          <input
+            type="file"
+            name="photo"
+            onChange={(e) =>
+              setEditStudent({ ...editStudent, photoFile: e.target.files[0] })
+            }
           />
           <div className="flex space-x-2">
             <button
@@ -161,9 +186,7 @@ const StudentsList = () => {
       <div className="mb-4">
         <button
           disabled={selectedStudents.length === 0}
-          onClick={() =>
-            navigate("/generate-id", { state: { ids: selectedStudents } })
-          }
+          onClick={() => downloadPDF()}
           className={`px-4 py-2 rounded text-white ${
             selectedStudents.length === 0
               ? "bg-gray-400 cursor-not-allowed"
@@ -182,6 +205,7 @@ const StudentsList = () => {
             <th className="p-2 border">ID</th>
             <th className="p-2 border">Category</th>
             <th className="p-2 border">Session</th>
+            <th className="p-2 border">Photo</th>
             <th className="p-2 border">Action</th>
           </tr>
         </thead>
@@ -199,6 +223,13 @@ const StudentsList = () => {
               <td className="p-2 border">{student.studentId}</td>
               <td className="p-2 border">{student.category}</td>
               <td className="p-2 border">{student.session}</td>
+              <td className="p-2 border">
+                <img
+                  src={student.photo}
+                  alt="Student"
+                  className="w-12 h-12 object-cover rounded-full"
+                />
+              </td>
               <td className="p-2 border space-x-2">
                 <button
                   onClick={() => setEditStudent(student)}

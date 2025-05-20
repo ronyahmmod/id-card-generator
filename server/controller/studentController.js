@@ -1,4 +1,6 @@
 const Student = require("../models/Student");
+const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
 
 const getAllStudents = async (req, res) => {
   try {
@@ -34,21 +36,30 @@ const getAllStudents = async (req, res) => {
 };
 
 const addStudent = async (req, res) => {
-  const {
-    fullName,
-    fatherName,
-    motherName,
-    studentId,
-    roll,
-    className,
-    bloodGroup,
-    dateOfBirth,
-    section,
-    photo,
-    category,
-    session,
-  } = req.body;
+  console.log(req.file);
+  console.log(req.body);
   try {
+    const {
+      fullName,
+      fatherName,
+      motherName,
+      studentId,
+      roll,
+      className,
+      bloodGroup,
+      dateOfBirth,
+      section,
+      category,
+      session,
+    } = req.body;
+    let photoUrl = null;
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "college-system/students",
+      });
+      photoUrl = result.secure_url;
+      fs.unlinkSync(req.file.path); // Delete file from the local
+    }
     const newStudent = new Student({
       fullName,
       fatherName,
@@ -59,7 +70,7 @@ const addStudent = async (req, res) => {
       bloodGroup,
       dateOfBirth,
       section,
-      photo,
+      photo: photoUrl,
       category,
       session,
     });
@@ -67,6 +78,7 @@ const addStudent = async (req, res) => {
     await newStudent.save();
     res.status(201).json(newStudent);
   } catch (error) {
+    console.error(error.message);
     return res
       .status(500)
       .json({ message: "An error occured: " + error.message });

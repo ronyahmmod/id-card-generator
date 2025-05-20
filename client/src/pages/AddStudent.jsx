@@ -1,109 +1,140 @@
+// AddStudent.jsx
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function AddStudent() {
+const AddStudent = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    fatherName: "",
-    motherName: "",
+    category: "",
     className: "",
+    group: "",
     roll: "",
     session: "",
-    category: "HSC",
+    contact: "",
+    fatherName: "",
+    motherName: "",
+    photo: null,
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, photo: e.target.files[0] });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/v1/students", formData);
-      alert("Student added successfully");
-    } catch (error) {
-      alert("Failed to add student" + error.message);
+      const data = new FormData();
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+      for (let [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      await axios.post("http://localhost:4000/api/v1/students", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      navigate("/");
+    } catch (err) {
+      console.error("Error creating student:", err.message);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded">
-      <h2 className="text-xl font-semibold mb-4">Add New Student</h2>
+    <div className="max-w-xl mx-auto p-4">
+      <h2 className="text-xl font-bold mb-4">Add Student</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          type="text"
           name="fullName"
           placeholder="Full Name"
+          className="w-full border p-2"
           value={formData.fullName}
           onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          name="fatherName"
-          placeholder="Father's Name"
-          value={formData.fatherName}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          name="motherName"
-          placeholder="Mother's Name"
-          value={formData.motherName}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
         />
         <input
           type="text"
           name="className"
-          placeholder="Class"
+          placeholder="Class Name"
+          className="w-full border p-2"
           value={formData.className}
           onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
+        />
+        <input
+          type="text"
+          name="group"
+          placeholder="Group"
+          className="w-full border p-2"
+          value={formData.group}
+          onChange={handleChange}
         />
         <input
           type="text"
           name="roll"
-          placeholder="Roll"
+          placeholder="Class Roll"
+          className="w-full border p-2"
           value={formData.roll}
           onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
         />
         <input
-          type="text"
-          name="session"
-          placeholder="Session (ex: 2022-2023)"
-          value={formData.session}
-          onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-          required
-        />
-        <select
           name="category"
+          placeholder="Category"
+          className="w-full border p-2"
           value={formData.category}
           onChange={handleChange}
-          className="w-full border px-4 py-2 rounded"
-        >
-          <option value="HSC">HSC</option>
-          <option value="DEGREE">Degree</option>
-          <option value="HONORS">Honors</option>
-        </select>
+        />
+        <input
+          name="session"
+          placeholder="Session"
+          className="w-full border p-2"
+          value={formData.session}
+          onChange={handleChange}
+        />
+        <input
+          name="contact"
+          placeholder="Contact Number"
+          className="w-full border p-2"
+          value={formData.contact}
+          onChange={handleChange}
+        />
+        <input
+          name="fatherName"
+          placeholder="Father's Name"
+          className="w-full border p-2"
+          value={formData.fatherName}
+          onChange={handleChange}
+        />
+        <input
+          name="motherName"
+          placeholder="Mother's Name"
+          className="w-full border p-2"
+          value={formData.motherName}
+          onChange={handleChange}
+        />
+        <input
+          type="file"
+          name="photo"
+          onChange={handleFileChange}
+          className="w-full border p-2"
+        />
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           Submit
         </button>
       </form>
     </div>
   );
-}
+};
+
+export default AddStudent;

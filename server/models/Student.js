@@ -33,6 +33,11 @@ const studentSchema = new mongoose.Schema(
       required: [true, "Session is required"],
       trim: true,
     },
+    group: {
+      type: String,
+      required: [true, "Group is required"],
+      trim: true,
+    },
     section: {
       type: String,
     },
@@ -49,6 +54,7 @@ const studentSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
+      required: [true, "Student must have a photo"],
     },
     category: {
       type: String,

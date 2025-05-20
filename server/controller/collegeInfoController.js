@@ -40,6 +40,7 @@ exports.addCollegeInfo = async (req, res) => {
     await newInfo.save();
     return res.status(201).json(newInfo);
   } catch (error) {
+    console.error(error.message);
     return res.status(500).json({ message: "Error occured: " + error.message });
   }
 };

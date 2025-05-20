@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middlewares/upload");
+
 const {
   addStudent,
   getAllStudents,
@@ -9,7 +11,7 @@ const {
   getStudent,
 } = require("../controller/studentController");
 
-router.post("/", addStudent);
+router.post("/", upload.single("photo"), addStudent);
 router.get("/", getAllStudents);
 router.get("/:id", getStudent);
 router.delete("/:id", deleteStudent);

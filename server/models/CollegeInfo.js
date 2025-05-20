@@ -21,6 +21,14 @@ const collegeInfoSchema = new mongoose.Schema({
     type: String,
     required: [true, "Principal signature URL is required"],
   },
+  email: {
+    type: String,
+    required: [true, "College email must be required"],
+  },
+  phone: {
+    type: String,
+    required: [true, "College phone number is required"],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

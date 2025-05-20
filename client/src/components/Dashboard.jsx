@@ -14,7 +14,19 @@ export default function Dashboard() {
         to="/student-list"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-4"
       >
-        + List of Students
+        -- List of Students
+      </Link>
+      <Link
+        to="/college-info"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-4"
+      >
+        + Add College Info
+      </Link>
+      <Link
+        to="/download-id-cards"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-4"
+      >
+        Download ID Cards
       </Link>
     </div>
   );
