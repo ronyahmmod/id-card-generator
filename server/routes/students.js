@@ -11,11 +11,11 @@ const {
   getStudent,
 } = require("../controller/studentController");
 
-router.post("/", upload.single("photo"), addStudent);
+router.post("/", upload.single("photoFile"), addStudent);
 router.get("/", getAllStudents);
 router.get("/:id", getStudent);
 router.delete("/:id", deleteStudent);
 router.put("/:id", updateStudent);
-router.patch("/:id", partialUpdateStudent);
+router.patch("/:id", upload.single("photoFile"), partialUpdateStudent);
 
 module.exports = router;

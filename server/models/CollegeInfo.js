@@ -29,6 +29,14 @@ const collegeInfoSchema = new mongoose.Schema({
     type: String,
     required: [true, "College phone number is required"],
   },
+  logoPublicId: {
+    type: String,
+    required: [true, "Logo Public Id is required"],
+  },
+  signPublicId: {
+    type: String,
+    required: [true, "Sign Public Id is required"],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

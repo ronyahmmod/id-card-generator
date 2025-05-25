@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import StudentFormModal from "../components/StudentFormModal";
 
 const StudentsList = () => {
   const [students, setStudents] = useState([]);
@@ -8,10 +8,26 @@ const StudentsList = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [editStudent, setEditStudent] = useState(null);
-  const studentsPerPage = 5;
-  const navigate = useNavigate();
 
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState("add");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  const studentsPerPage = 5;
+
+  // Open Add Modal
+  const openAddModal = () => {
+    setSelectedStudent(null);
+    setFormMode("add");
+    setIsFormOpen(true);
+  };
+
+  // Open Edit Modal
+  const openEditModal = (student) => {
+    setSelectedStudent(student);
+    setFormMode("Edit");
+    setIsFormOpen(true);
+  };
   const fetchStudents = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/students");
@@ -37,6 +53,7 @@ const StudentsList = () => {
   }, [search, students]);
 
   const handleDelete = async (id) => {
+    console.log(id);
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this student?"
     );
@@ -50,21 +67,49 @@ const StudentsList = () => {
     }
   };
 
-  const handleEditChange = (e) => {
-    setEditStudent({ ...editStudent, [e.target.name]: e.target.value });
-  };
+  // const handleEditChange = (e) => {
+  //   setEditStudent({ ...editStudent, [e.target.name]: e.target.value });
+  // };
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
+  // const handleEditSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.patch(
+  //       `http://localhost:4000/api/v1/students/${editStudent._id}`,
+  //       editStudent
+  //     );
+  //     setEditStudent(null);
+  //     fetchStudents();
+  //   } catch (error) {
+  //     console.error("Error updating student:", error);
+  //   }
+  // };
+
+  const handleFormSubmit = async (data) => {
     try {
-      await axios.patch(
-        `http://localhost:4000/api/v1/students/${editStudent._id}`,
-        editStudent
-      );
-      setEditStudent(null);
+      const formData = new FormData();
+      for (const key in data) {
+        if (data[key]) {
+          formData.append(key, data[key]);
+        }
+      }
+      if (formMode === "add") {
+        await axios.post("http://localhost:4000/api/v1/students", formData);
+      } else {
+        await axios.patch(
+          `http://localhost:4000/api/v1/students/${data._id}`,
+          formData
+        );
+      }
+      if (formMode == "add") {
+        alert("Student added successfully");
+      } else {
+        alert("Student update successfully");
+      }
       fetchStudents();
+      setIsFormOpen(false);
     } catch (error) {
-      console.error("Error updating student:", error);
+      console.error("Error submitting form", error);
     }
   };
 
@@ -105,7 +150,7 @@ const StudentsList = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Students List</h2>
         <button
-          onClick={() => navigate("/add-student")}
+          onClick={openAddModal}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
         >
           Add Student
@@ -119,69 +164,6 @@ const StudentsList = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-
-      {editStudent && (
-        <form
-          onSubmit={handleEditSubmit}
-          className="bg-yellow-100 p-4 mb-4 rounded"
-        >
-          <h3 className="font-bold mb-2">Edit Student</h3>
-          <input
-            type="text"
-            name="fullName"
-            value={editStudent.fullName}
-            onChange={handleEditChange}
-            placeholder="Full Name"
-            className="border p-2 mb-2 w-full"
-          />
-
-          <input
-            type="text"
-            name="category"
-            value={editStudent.category}
-            onChange={handleEditChange}
-            placeholder="Category"
-            className="border p-2 mb-2 w-full"
-          />
-          <input
-            type="text"
-            name="session"
-            value={editStudent.session}
-            onChange={handleEditChange}
-            placeholder="Session"
-            className="border p-2 mb-2 w-full"
-          />
-          {editStudent.photo && (
-            <img
-              src={editStudent.photo}
-              alt="Current"
-              className="w-20 h-20 object-cover rounded mb-2"
-            />
-          )}
-          <input
-            type="file"
-            name="photo"
-            onChange={(e) =>
-              setEditStudent({ ...editStudent, photoFile: e.target.files[0] })
-            }
-          />
-          <div className="flex space-x-2">
-            <button
-              type="submit"
-              className="bg-green-500 px-4 py-2 rounded text-white hover:bg-green-600 cursor-pointer"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditStudent(null)}
-              className="bg-gray-400 px-4 py-2 rounded text-white hover:bg-gray-500 cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
 
       <div className="mb-4">
         <button
@@ -232,7 +214,7 @@ const StudentsList = () => {
               </td>
               <td className="p-2 border space-x-2">
                 <button
-                  onClick={() => setEditStudent(student)}
+                  onClick={() => openEditModal(student)}
                   className="bg-yellow-400 px-2 py-1 rounded text-white hover:bg-yellow-500 cursor-pointer"
                 >
                   Edit
@@ -270,6 +252,16 @@ const StudentsList = () => {
           Next
         </button>
       </div>
+      <StudentFormModal
+        isOpen={isFormOpen}
+        onClose={() => {
+          setIsFormOpen(false);
+          setSelectedStudent(null);
+        }}
+        onSubmit={handleFormSubmit}
+        initialData={selectedStudent}
+        mode={formMode}
+      />
     </div>
   );
 };

@@ -28,6 +28,12 @@ export default function Dashboard() {
       >
         Download ID Cards
       </Link>
+      <Link
+        to="/college-list"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-4"
+      >
+        List of college version
+      </Link>
     </div>
   );
 }

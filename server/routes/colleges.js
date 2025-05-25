@@ -5,6 +5,8 @@ const {
   addCollegeInfo,
   getAllCollegeInfos,
   getLatestCollegeInfo,
+  updateCollegeInfo,
+  deleteCollegeInfo,
 } = require("../controller/collegeInfoController");
 
 router.post(
@@ -14,5 +16,11 @@ router.post(
 );
 router.get("/latest", getLatestCollegeInfo);
 router.get("/", getAllCollegeInfos);
+router.patch(
+  "/:id",
+  upload.fields([{ name: "logoFile" }, { name: "signFile" }]),
+  updateCollegeInfo
+);
+router.delete("/:id", deleteCollegeInfo);
 
 module.exports = router;

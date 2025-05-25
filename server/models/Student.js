@@ -56,6 +56,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: [true, "Student must have a photo"],
     },
+    photoPublicId: {
+      type: String,
+      required: [true, "Photo public id is required"],
+    },
     category: {
       type: String,
       enum: ["HSC", "DEGREE", "HONORS"],
