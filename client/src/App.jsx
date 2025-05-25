@@ -4,6 +4,7 @@ import AddStudent from "./pages/AddStudent";
 import StudentList from "./pages/StudentList";
 import CollegeInfoForm from "./pages/CollegeInfoForm";
 import IDCardDownload from "./pages/IDCardDownload";
+import CollegeList from "./pages/CollegeList";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/student-list" element={<StudentList />} />
         <Route path="/college-info" element={<CollegeInfoForm />} />
         <Route path="/download-id-cards" element={<IDCardDownload />} />
+        <Route path="/college-list" element={<CollegeList />} />
       </Routes>
     </Router>
   );
