@@ -9,7 +9,7 @@ import { MdExpandMore, MdInfo } from "react-icons/md";
 export const sidebarConfig = [
   {
     label: "Dashboard",
-    path: "/dashboard",
+    path: "/",
     icon: FaHome,
   },
   {
@@ -29,11 +29,11 @@ export const sidebarConfig = [
     ],
   },
   {
-    label: "Teachers/Stuff",
+    label: "Employes",
     icon: FaChalkboardTeacher,
     children: [
-      { label: "Teacher/Stuff List", path: "/teachers" },
-      { label: "Add Teacher/Stuff", path: "/teachers/add" },
+      { label: "Employe List", path: "/employes" },
+      { label: "Add Employef", path: "/employes/add" },
     ],
   },
   {
