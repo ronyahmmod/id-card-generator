@@ -49,6 +49,7 @@ const EmployeList = () => {
   };
 
   const openEditModal = (employe) => {
+    console.log(employe);
     setSelectedEmploye(employe);
     setFormMode("edit");
     setIsFormOpen(true);
@@ -58,7 +59,8 @@ const EmployeList = () => {
     const confirmDelete = window.confirm("Are you sure want to delete?");
     if (!confirmDelete) return;
     try {
-      axios.delete(`http://localhost:4000/api/v1/employes/${id}`);
+      await axios.delete(`http://localhost:4000/api/v1/employes/${id}`);
+      alert("Employe delete successfully");
       fetchEmployes();
     } catch (error) {
       console.error(error.message);
@@ -231,7 +233,7 @@ const EmployeList = () => {
           setSelectedEmploye(null);
         }}
         initialData={selectedEmploye}
-        mode={formMode}
+        formMode={formMode}
       />
     </div>
   );

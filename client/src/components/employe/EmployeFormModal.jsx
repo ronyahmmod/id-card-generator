@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./steps/Modal";
 import PersonalInfoForm from "./steps/PersonalInfoForm";
 import EducationForm from "./steps/EducationForm";
@@ -24,6 +24,74 @@ const EmployeFormModal = ({
       photoPublicId: initialData?.photoPublicId || "",
     },
   });
+  useEffect(() => {
+    if (open) {
+      setStep(0);
+    }
+    if (
+      formMode === "edit" &&
+      open &&
+      initialData &&
+      Object.keys(initialData).length > 0
+    ) {
+      setFormData({
+        personal: {
+          name: initialData.name || "",
+          designation: initialData.designation || "",
+          department: initialData.department || "",
+          subject: initialData.subject || "",
+          email: initialData.email || "",
+          phone: initialData.phone || "",
+          secondaryPhone: initialData.secondaryPhone || "",
+          dob: initialData.dob ? initialData.dob.slice(0, 10) : "",
+          nid: initialData.nid || "",
+          address: initialData.address || "",
+          joinDate: initialData.joinDate
+            ? initialData.joinDate.slice(0, 10)
+            : "",
+          mpoDate: initialData.mpoDate ? initialData.mpoDate.slice(0, 10) : "",
+          indexNo: initialData.indexNo || "",
+          retiredOn: initialData.retiredOn
+            ? initialData.retiredOn.slice(0, 10)
+            : "",
+        },
+        education: initialData.education || [],
+        photo: {
+          file: null,
+          preview: "",
+          photoUrl: initialData.photoUrl || "",
+          photoPublicId: initialData.photoPublicId || "",
+        },
+        _id: initialData._id,
+      });
+    } else if (formMode === "add") {
+      setFormData({
+        personal: {
+          name: "",
+          designation: "",
+          department: "",
+          subject: "",
+          email: "",
+          phone: "",
+          secondaryPhone: "",
+          dob: "",
+          nid: "",
+          address: "",
+          joinDate: "",
+          mpoDate: "",
+          indexNo: "",
+          retiredOn: "",
+        },
+        education: [],
+        photo: {
+          file: null,
+          preview: "",
+          photoUrl: "",
+          photoPublicId: "",
+        },
+      });
+    }
+  }, [initialData, formMode, open]);
 
   const updateSection = (section, value) => {
     setFormData((prev) => ({
