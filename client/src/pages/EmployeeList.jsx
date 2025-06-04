@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import EmployeFormModal from "../components/employe/EmployeFormModal";
+import EmployeeFormModal from "../components/employee/EmployeeFormModal";
+import EmployeePrintConfigModal from "../components/employee/EmployeePrintConfigModal";
 
-const EmployeList = () => {
-  const [employes, setEmployes] = useState([]);
+const EmployeeList = () => {
+  const [employees, setEmployees] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedEmploye, setSelectedEmploye] = useState(null);
-  const [filteredEmployes, setFilteredEmployes] = useState([]);
-  const [selectedEmployes, setSelectedEmployes] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formMode, setFormMode] = useState("add");
-  const employePerPage = 5;
+  const [configText, setConfigText] = useState({ title: "", subTitle: "" });
+  //   State for exporting employee list [like pdf, xl, csv ets]
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+
+  const employeePerPage = 5;
 
   // Fetch employes
-  const fetchEmployes = async () => {
+  const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/v1/employes");
-      setEmployes(res.data.data);
+      const res = await axios.get("http://localhost:4000/api/v1/employees");
+      setEmployees(res.data.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -27,41 +32,89 @@ const EmployeList = () => {
   };
 
   useEffect(() => {
-    fetchEmployes();
+    fetchEmployees();
   }, []);
 
   useEffect(() => {
-    const filtered = employes.filter((employe) =>
+    const filtered = employees.filter((employe) =>
       employe.name.toLowerCase().includes(search.toLowerCase())
     );
-    setFilteredEmployes(filtered);
+    setFilteredEmployees(filtered);
     setCurrentPage(1);
-  }, [search, employes]);
-  const toggleSelectedEmploye = (id) => {
-    setSelectedEmployes((prev) =>
+  }, [search, employees]);
+
+  const toggleSelectedEmployee = (id) => {
+    setSelectedEmployees((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
     );
   };
+  const handleChangeConfig = (e) => {
+    const { name, value } = e.target;
+    setConfigText((prev) => ({ ...prev, [name]: value }));
+  };
+  const downloadEmployeeList = (selectedFields) => {
+    return async function () {
+      const res = await fetch(
+        "http://localhost:4000/api/v1/employees/generate-pdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            configText: configText,
+            selectedFields: selectedFields,
+          }),
+        }
+      );
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "teacher_list.pdf";
+      link.click();
+    };
+  };
   const openAddModal = () => {
-    setSelectedEmploye(null);
+    setSelectedEmployee(null);
     setFormMode("add");
     setIsFormOpen(true);
   };
 
-  const openEditModal = (employe) => {
-    console.log(employe);
-    setSelectedEmploye(employe);
+  const openEditModal = (employee) => {
+    setSelectedEmployee(employee);
     setFormMode("edit");
     setIsFormOpen(true);
+  };
+
+  const generateIdCards = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/employees/generate-id-cards",
+        {
+          selectedEmployees,
+        },
+        { responseType: "blob" }
+      );
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "student-id-cards.pdf");
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure want to delete?");
     if (!confirmDelete) return;
     try {
-      await axios.delete(`http://localhost:4000/api/v1/employes/${id}`);
-      alert("Employe delete successfully");
-      fetchEmployes();
+      await axios.delete(`http://localhost:4000/api/v1/employees/${id}`);
+      alert("Employee delete successfully");
+      fetchEmployees();
     } catch (error) {
       console.error(error.message);
     }
@@ -102,8 +155,8 @@ const EmployeList = () => {
       /*——— 3. Axios call ———*/
       const url =
         formMode === "add"
-          ? "http://localhost:4000/api/v1/employes"
-          : `http://localhost:4000/api/v1/employes/${data._id}`;
+          ? "http://localhost:4000/api/v1/employees"
+          : `http://localhost:4000/api/v1/employees/${data._id}`;
 
       await axios({
         method: formMode === "add" ? "post" : "patch",
@@ -118,9 +171,9 @@ const EmployeList = () => {
           ? "Employee added successfully."
           : "Employee updated successfully."
       );
-      fetchEmployes(); // list refresh
+      fetchEmployees(); // list refresh
       setIsFormOpen(false); // modal বন্ধ (থাকলে)
-      setSelectedEmploye(false);
+      setSelectedEmployee(false);
     } catch (err) {
       console.error("Submit error ➜", err);
       alert(
@@ -130,23 +183,41 @@ const EmployeList = () => {
     }
   };
 
-  const indexOfLastEmploye = currentPage * employePerPage;
-  const indexOfFirstEmploye = indexOfLastEmploye - employePerPage;
-  const currentEmployes = filteredEmployes.slice(
-    indexOfFirstEmploye,
-    indexOfLastEmploye
+  const indexOfLastEmployee = currentPage * employeePerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeePerPage;
+  const currentEmployees = filteredEmployees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
   );
-  const totalPages = Math.ceil(filteredEmployes.length / employePerPage);
+  const totalPages = Math.ceil(filteredEmployees.length / employeePerPage);
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Employe List</h2>
-        <button
-          onClick={openAddModal}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-        >
-          Add Employ
-        </button>
+        <div>
+          <h2 className="text-xl font-bold">Employe List</h2>
+        </div>
+        <div className="flex gap-x-2">
+          <button
+            onClick={openAddModal}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+          >
+            Add Employ
+          </button>
+          <button
+            onClick={() => {
+              setIsConfigModalOpen(true);
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+          >
+            Employee Print Configuaration
+          </button>
+          <button
+            onClick={generateIdCards}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+          >
+            Generate ID Cards
+          </button>
+        </div>
       </div>
       <input
         type="text"
@@ -170,31 +241,31 @@ const EmployeList = () => {
             </tr>
           </thead>
           <tbody>
-            {currentEmployes.map((employe) => (
-              <tr key={employe._id}>
+            {currentEmployees.map((employee) => (
+              <tr key={employee._id}>
                 <td className="p-2 border text-center">
                   <input
                     type="checkbox"
-                    checked={selectedEmployes.includes(employe._id)}
-                    onChange={() => toggleSelectedEmploye(employe._id)}
+                    checked={selectedEmployees.includes(employee._id)}
+                    onChange={() => toggleSelectedEmployee(employee._id)}
                   />
                 </td>
-                <td className="p-2 border">{employe.name}</td>
-                <td className="p-2 border">{employe.designation}</td>
-                <td className="p-2 border">{employe.subject}</td>
-                <td className="p-2 border">{employe.phone}</td>
+                <td className="p-2 border">{employee.name}</td>
+                <td className="p-2 border">{employee.designation}</td>
+                <td className="p-2 border">{employee.subject}</td>
+                <td className="p-2 border">{employee.phone}</td>
                 <td className="p-2 border space-x-2">
                   <button
                     className="bg-yellow-400 px-2 py-1 rounded text-white hover:bg-yellow-500 cursor-pointer"
                     onClick={() => {
-                      openEditModal(employe);
+                      openEditModal(employee);
                     }}
                   >
                     Edit
                   </button>
                   <button
                     className="bg-red-500 px-2 py-1 rounded text-white hover:bg-red-600 cursor-pointer"
-                    onClick={() => handleDelete(employe._id)}
+                    onClick={() => handleDelete(employee._id)}
                   >
                     Delete
                   </button>
@@ -225,18 +296,30 @@ const EmployeList = () => {
           Next
         </button>
       </div>
-      <EmployeFormModal
+      <EmployeeFormModal
         open={isFormOpen}
         onSubmit={handleSubmit}
         onClose={() => {
           setIsFormOpen(false);
-          setSelectedEmploye(null);
+          setSelectedEmployee(null);
         }}
-        initialData={selectedEmploye}
+        initialData={selectedEmployee}
         formMode={formMode}
+      />
+
+      {/* Employe Config Modal */}
+      <EmployeePrintConfigModal
+        open={isConfigModalOpen}
+        onClose={() => {
+          setIsConfigModalOpen(false);
+        }}
+        modalTitle="Controll your employees exports."
+        onSubmit={downloadEmployeeList}
+        configText={configText}
+        handleChangeConfig={handleChangeConfig}
       />
     </div>
   );
 };
 
-export default EmployeList;
+export default EmployeeList;

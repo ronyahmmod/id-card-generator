@@ -5,7 +5,7 @@ import EducationForm from "./steps/EducationForm";
 import PhotoUploadForm from "./steps/PhotoUpload";
 import PreviewForm from "./steps/PreviewForm";
 
-const EmployeFormModal = ({
+const EmployeeFormModal = ({
   formMode = "add",
   initialData = {},
   open,
@@ -51,6 +51,7 @@ const EmployeFormModal = ({
             : "",
           mpoDate: initialData.mpoDate ? initialData.mpoDate.slice(0, 10) : "",
           indexNo: initialData.indexNo || "",
+          role: initialData.role || "",
           retiredOn: initialData.retiredOn
             ? initialData.retiredOn.slice(0, 10)
             : "",
@@ -79,6 +80,7 @@ const EmployeFormModal = ({
           address: "",
           joinDate: "",
           mpoDate: "",
+          role: "",
           indexNo: "",
           retiredOn: "",
         },
@@ -182,4 +184,4 @@ const EmployeFormModal = ({
   );
 };
 
-export default EmployeFormModal;
+export default EmployeeFormModal;

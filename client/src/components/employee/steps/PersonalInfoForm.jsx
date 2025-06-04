@@ -16,6 +16,7 @@ const PersonalInfoForm = ({ data, update }) => {
     ["secondaryPhone", "Secondary Phone"],
     ["dob", "Date of Birth", "date"],
     ["nid", "NID Number"],
+    ["role", "Role"],
     ["address", "Address"],
     ["joinDate", "Joining Date", "date"],
     ["mpoDate", "MPO Date", "date"],

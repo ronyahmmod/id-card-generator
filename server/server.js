@@ -5,6 +5,7 @@ const app = express();
 const studentRoutes = require("./routes/students");
 const collegeRoutes = require("./routes/colleges");
 const idCardRoutes = require("./routes/idCards");
+const employeeRoutes = require("./routes/employees");
 
 const { connectDB } = require("./config/db");
 connectDB();
@@ -17,7 +18,8 @@ app.use(cors());
 // ROUTERS
 app.use("/api/v1/students", studentRoutes);
 app.use("/api/v1/colleges", collegeRoutes);
-app.use("/api/v1/id-cards", idCardRoutes),
-  app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-  });
+app.use("/api/v1/id-cards", idCardRoutes);
+app.use("/api/v1/employees", employeeRoutes);
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});

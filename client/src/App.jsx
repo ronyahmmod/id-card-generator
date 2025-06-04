@@ -6,7 +6,7 @@ import CollegeInfoForm from "./pages/CollegeInfoForm";
 import IDCardDownload from "./pages/IDCardDownload";
 import CollegeList from "./pages/CollegeList";
 import AppLayout from "./components/AppLayout";
-import EmployeList from "./pages/EmployeList";
+import EmployeeList from "./pages/EmployeeList";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           <Route path="/college-info" element={<CollegeInfoForm />} />
           <Route path="/download-id-cards" element={<IDCardDownload />} />
           <Route path="/colleges" element={<CollegeList />} />
-          <Route path="/employes" element={<EmployeList />} />
+          <Route path="/employees" element={<EmployeeList />} />
         </Route>
       </Routes>
     </Router>
