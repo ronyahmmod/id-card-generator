@@ -8,6 +8,16 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student",
+      default: null,
+    },
+    employee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employee",
+      default: null,
+    },
     email: {
       type: String,
       required: true,

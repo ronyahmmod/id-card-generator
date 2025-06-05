@@ -48,6 +48,7 @@ exports.register = async (req, res) => {
 // @route   POST /auth/login
 // @access  Public
 exports.login = async (req, res) => {
+  console.log("Hited");
   try {
     const { email, password } = req.body;
 
