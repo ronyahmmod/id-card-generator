@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const authController = require("../controller/authController");
+const verifyToken = require("../middlewares/verifyToken");
 
 // POST /auth/register
 router.post("/register", authController.register);
@@ -34,19 +35,25 @@ router.get(
     );
 
     // Option 1: Send token as JSON
-    res.json({
-      message: "✅ Login successful",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    // res.json({
+    //   message: "✅ Login successful",
+    //   token,
+    //   user: {
+    //     id: user._id,
+    //     name: user.name,
+    //     email: user.email,
+    //     role: user.role,
+    //   },
+    // });
 
     // Option 2 (alternative): Send as cookie
     // res.cookie('token', token, { httpOnly: true }).redirect('/dashboard');
+
+    const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
+    const redirectUrl = `${frontendUrl}/oauth-success?token=${token}&name=${encodeURIComponent(
+      user.name
+    )}&email=${encodeURIComponent(user.email)}&role=${user.role}`;
+    res.redirect(redirectUrl);
   }
 );
 
@@ -57,5 +64,7 @@ router.get("/success", (req, res) => {
 router.get("/failure", (req, res) => {
   return res.status(200).json({ message: "Google login failed!" });
 });
+
+router.get("/me", verifyToken, authController.getMe);
 
 module.exports = router;
