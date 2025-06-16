@@ -1,14 +1,16 @@
-// components/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+import { useAuth } from "../contexts/AuthContext";
 
-export default function ProtectedRoute({ children, allowedRoles }) {
-  const token = localStorage.getItem("token");
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { user, loading } = useAuth();
 
-  if (!token) return <Navigate to="/login" />;
-  const user = jwtDecode(token);
-  if (allowedRoles && !allowedRoles.includes(user.role))
-    return <Navigate to="/unauthorized" />;
+  if (loading) return null; // or a spinner
+
+  if (!user) return <Navigate to="/login" replace />;
+  if (!allowedRoles.includes(user.role))
+    return <Navigate to="/unauthorized" replace />;
 
   return children;
-}
+};
+
+export default ProtectedRoute;

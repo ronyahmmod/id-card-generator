@@ -2,19 +2,21 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
-  const login = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("http://localhost:4000/auth/login", {
         email,
         password,
       });
-      localStorage.setItem("token", data.token);
+      login(data.token, data.user);
       toast.success("Login successful!");
       window.location.href = "/dashboard";
     } catch (err) {
@@ -35,7 +37,7 @@ export default function Login() {
           to log in quickly.
         </p>
 
-        <form onSubmit={login} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
             className="w-full p-3 border rounded-lg"

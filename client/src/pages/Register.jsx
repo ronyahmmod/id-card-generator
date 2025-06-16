@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -11,11 +12,13 @@ export default function Register() {
     role: "student",
   });
 
-  const register = async (e) => {
+  const { login } = useAuth();
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("/api/auth/register", form);
-      localStorage.setItem("token", data.token);
+      login(data.token, data.user);
       toast.success("Registered successfully!");
       window.location.href = "/dashboard";
     } catch (err) {
@@ -36,7 +39,7 @@ export default function Register() {
           allowed.
         </p>
 
-        <form onSubmit={register} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
             className="w-full p-3 border rounded-lg"
