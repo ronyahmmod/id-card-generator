@@ -10,7 +10,7 @@ export const SidebarItem = ({ item, currentPath }) => {
     return (
       <div className="mb-2">
         <div
-          className="flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded"
+          className="flex min-h-full items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded"
           onClick={() => setOpen(!open)}
         >
           <div className="flex items-center gap-2">
@@ -26,8 +26,10 @@ export const SidebarItem = ({ item, currentPath }) => {
               <Link
                 to={child.path}
                 key={child.label}
-                className={`block p-2 text-sm rounded hover:bg-blue-100 ${
-                  isActive(child.path) ? "bg-blue-100 font-medium" : ""
+                className={`block p-2 text-sm rounded hover:bg-blue-100 dark:hover:bg-blue-700 ${
+                  isActive(child.path)
+                    ? "bg-blue-100 dark:bg-blue-700 font-medium"
+                    : ""
                 }`}
               >
                 {child.label}
@@ -42,8 +44,8 @@ export const SidebarItem = ({ item, currentPath }) => {
   return (
     <Link
       to={item.path}
-      className={`flex items-center gap-2 p-2 rounded hover:bg-blue-100 mb-2 ${
-        isActive(item.path) ? "bg-blue-100 font-semibold" : ""
+      className={`flex items-center gap-2 p-2 rounded hover:bg-blue-100 dark:hover:bg-blue-700 mb-2 ${
+        isActive(item.path) ? "bg-blue-100 dark:bg-blue-700 font-semibold" : ""
       }`}
     >
       {item.icon && <item.icon className="text-lg" />}

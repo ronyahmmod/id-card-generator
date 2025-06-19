@@ -18,12 +18,61 @@ const studentSchema = new mongoose.Schema(
       required: [true, "Student mother name is required"],
       trim: true,
     },
+    address: {
+      type: String,
+      required: true,
+    },
+    mobile: {
+      type: String,
+      required: true,
+    },
+    guardianMobile: {
+      type: String,
+      required: true,
+    },
+    previousEducation: [
+      {
+        examName: String,
+        examYear: String,
+        result: String,
+        institutionName: String,
+        authority: String,
+        resultBase: String,
+      },
+    ],
+    quota: [{ name: String, description: String }],
+    skills: [{ name: String, description: String }],
+    awards: [
+      {
+        name: String,
+        description: String,
+        year: String,
+        institutionName: String,
+      },
+    ],
     studentId: {
       type: String,
       required: [true, "Student ID is required"],
       unique: true,
       default: () => nanoid(10),
     },
+    status: {
+      type: String,
+      enum: ["draft", "submitted", "approved", "rejected", "edit-returned"],
+      default: "draft",
+    },
+    editableByStudent: {
+      type: Boolean,
+      default: true,
+    },
+    submittedAt: Date,
+    approvedAt: Date,
+    rejectedReason: String,
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
     className: {
       type: String,
       required: [true, "Class is required"],
@@ -35,7 +84,14 @@ const studentSchema = new mongoose.Schema(
     },
     group: {
       type: String,
-      required: [true, "Group is required"],
+      trim: true,
+    },
+    department: {
+      type: String,
+      trim: true,
+    },
+    trade: {
+      type: String,
       trim: true,
     },
     section: {
@@ -43,7 +99,6 @@ const studentSchema = new mongoose.Schema(
     },
     roll: {
       type: String,
-      required: [true, "Class roll is required"],
       trim: true,
     },
     bloodGroup: {
@@ -60,11 +115,14 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: [true, "Photo public id is required"],
     },
-    category: {
-      type: String,
-      enum: ["HSC", "DEGREE", "HONORS"],
-      required: [true, "Category is required"],
-    },
+    documents: [
+      {
+        url: String,
+        publicId: String,
+        name: String,
+        fileType: String,
+      },
+    ],
     additionalInfo: {
       type: String,
     },

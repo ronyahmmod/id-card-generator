@@ -1,6 +1,7 @@
 const Student = require("../models/Student");
 const { cloudinary, deleteFromCloudinary } = require("../config/cloudinary");
 const fs = require("fs");
+const User = require("../models/User");
 
 const getAllStudents = async (req, res) => {
   try {
@@ -200,6 +201,13 @@ const getStudent = async (req, res) => {
       .status(500)
       .json({ message: "An error occured: " + error.message });
   }
+};
+
+exports.saveAdmissionForm = async (req, res) => {
+  const { userId } = req.user;
+  const updates = req.body;
+
+  const user = await User.findById(userId);
 };
 module.exports = {
   addStudent,
