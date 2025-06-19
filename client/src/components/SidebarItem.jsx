@@ -10,7 +10,7 @@ export const SidebarItem = ({ item, currentPath }) => {
     return (
       <div className="mb-2">
         <div
-          className="flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded"
+          className="flex min-h-full items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded"
           onClick={() => setOpen(!open)}
         >
           <div className="flex items-center gap-2">

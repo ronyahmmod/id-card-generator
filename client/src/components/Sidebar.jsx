@@ -1,23 +1,24 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { SidebarItem } from "./SidebarItem";
 import { sidebarConfig } from "../config/sidebarConfig";
 import { useAuth } from "../contexts/AuthContext";
 
-const Sidebar = () => {
+const Sidebar = ({ open }) => {
+  const { user } = useAuth();
   const location = useLocation();
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
-    <div className="w-64 bg-white border-r shadow h-screen fixed top-0 left-0 p-4 flex flex-col justify-between overflow-y-auto">
-      <div>
-        <div className="text-2xl font-bold mb-6">🎓 Admin Panel</div>
-        {sidebarConfig.map((item) => (
+    <aside
+      className={`fixed md:static top-0 left-0 h-screen w-64 z-40 transform ${
+        open ? "translate-x-0" : "-translate-x-full"
+      } md:translate-x-0 transition-transform duration-300 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg`}
+    >
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-6 whitespace-nowrap">
+          🎓 {user.role === "student" ? "Student Panel" : "Admin Panel"}
+        </h2>
+        {sidebarConfig[user.role]?.map((item) => (
           <SidebarItem
             key={item.label}
             item={item}
@@ -25,14 +26,7 @@ const Sidebar = () => {
           />
         ))}
       </div>
-
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
-      >
-        Logout
-      </button>
-    </div>
+    </aside>
   );
 };
 

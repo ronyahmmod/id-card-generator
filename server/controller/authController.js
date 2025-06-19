@@ -2,7 +2,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 // Helper: Generate JWT Token
-const generateToken = (user) => {
+exports.generateToken = (user) => {
   return jwt.sign(
     {
       id: user._id,
@@ -48,7 +48,6 @@ exports.register = async (req, res) => {
 // @route   POST /auth/login
 // @access  Public
 exports.login = async (req, res) => {
-  console.log("Hited");
   try {
     const { email, password } = req.body;
 
