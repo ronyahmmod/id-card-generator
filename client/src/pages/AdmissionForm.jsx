@@ -18,7 +18,7 @@ const AdmissionForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow-md space-y-4">
+    <div className="max-w-full mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow-md space-y-4">
       {/* Progress Bar: Implement latter */}
       <div className="flex gap-2">
         {[1, 2, 3, 4].map((s) => (

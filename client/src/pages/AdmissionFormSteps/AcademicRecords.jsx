@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FormField from "../../components/forms/FormField";
 
 export default function AcademicRecords({ state, dispatch }) {
   const [formData, setFormData] = useState({
@@ -50,11 +51,18 @@ export default function AcademicRecords({ state, dispatch }) {
   };
 
   return (
-    <div className="p-4 border rounded-lg">
-      <h2 className="text-lg font-semibold mb-3">Academic Records</h2>
+    <div className="p-4 border rounded-lg dark:border-gray-100">
+      <h2 className="text-lg font-semibold mb-3 dark:text-gray-100">
+        Academic Records
+      </h2>
 
       {/* Input Fields */}
       <div className="grid grid-cols-2 gap-3 mb-4">
+        <FormField
+          type="text"
+          name="examName"
+          value={state.previousEducation.examName}
+        />
         <input
           type="text"
           placeholder="Exam Name"

@@ -7,7 +7,7 @@ const AboutMe = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <div className="max-w-full mx-auto p-6 mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
         <img
           src={user.profilePhoto}

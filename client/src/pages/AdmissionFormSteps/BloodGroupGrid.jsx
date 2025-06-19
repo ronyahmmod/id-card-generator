@@ -5,7 +5,7 @@ const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 export default function BloodGroupGrid({ selected, dispatch }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">
         Blood Group <span className="text-red-500">*</span>
       </label>
 
@@ -32,7 +32,7 @@ export default function BloodGroupGrid({ selected, dispatch }) {
         ))}
       </div>
 
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-gray-500 mt-1 dark:text-gray-100">
         Select your correct blood group.
       </p>
     </div>
