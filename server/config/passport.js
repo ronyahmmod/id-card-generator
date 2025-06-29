@@ -25,6 +25,7 @@ passport.use(
 
         return done(null, newUser);
       } catch (err) {
+        console.log("HIT");
         return done(err, null);
       }
     }

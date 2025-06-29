@@ -16,6 +16,8 @@ import AdmissionForm from "./pages/AdmissionForm";
 import SampleGrid from "./pages/SampleGrid";
 import AboutMe from "./pages/AboutMe";
 import Unauthorized from "./pages/UnAuthorized";
+import FormDemoPage from "./pages/FormDemoPage";
+import DemoForm from "./pages/DemoForm";
 
 function App() {
   return (
@@ -24,11 +26,15 @@ function App() {
       <Router>
         <Routes>
           {/* Public Testing Routes */}
+          <Route path="/employees-test" element={<EmployeeList />} />
+          <Route path="/demo-form" element={<FormDemoPage />} />
+          <Route path="/demo-form1" element={<DemoForm />} />
           <Route path="/data-grid" element={<SampleGrid />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/oauth-success" element={<OauthSuccess />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/students-demo" element={<StudentList />} />
 
           {/* Protected for All Authenticated Roles (student, teacher, staff, admin) */}
           <Route
