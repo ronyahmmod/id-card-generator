@@ -33,7 +33,7 @@ const initialValues = {
       resultBase: "",
     },
   ],
-  quota: [{ name: "", description: "" }],
+  quotas: [{ name: "", description: "" }],
   skills: [{ name: "", description: "" }],
   awards: [{ name: "", description: "", year: "", institutionName: "" }],
   bloodGroup: "",
@@ -41,12 +41,25 @@ const initialValues = {
   photo: null,
   documents: [],
   additionalInfo: "",
+  session: "",
+  className: "",
+  group: "",
+  trade: "",
+  department: "",
+  course: "",
 };
 
 export default function DemoForm() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [tab, setTab] = useState(0);
-  const tabs = ["Basic Info", "Education", "Other Details", "Documents"];
+  const tabs = [
+    "Course & Subject Selection",
+    "Basic Info",
+    "Education",
+    "Other Details",
+    "Documents",
+    "Payment",
+  ];
 
   return (
     <div className="p-4 max-w-6xl mx-auto text-base dark:text-white">
@@ -95,6 +108,105 @@ export default function DemoForm() {
               <div
                 className={`tab-content ${
                   tab === 0 ? "block" : "hidden"
+                } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="label mb-2">Session *</label>
+                    <Field
+                      name="session"
+                      className="input input-bordered w-full"
+                      placeholder="Session"
+                    />
+                  </div>
+                  <div>
+                    <label className="label mb-2">Select class *</label>
+                    <Field
+                      name="className"
+                      className="input input-bordered w-full"
+                      as="select"
+                    >
+                      <option value="">Select class</option>
+                      <option value="hsc">HSC</option>
+                      <option value="hsc-bmt">HSC-BMT</option>
+                      <option value="degree-pass">DEGREE-PASS</option>
+                      <option value="honours">HONOURS</option>
+                    </Field>
+                  </div>
+
+                  {values.className === "hsc" && (
+                    <div>
+                      <label className="label mb-2">Group *</label>
+                      <Field
+                        name="group"
+                        className="input input-bordered w-full"
+                        as="select"
+                      >
+                        <option value="">Chose your group</option>
+                        <option value="science">SCIENCE</option>
+                        <option value="humanities">HUMANITIES</option>
+                        <option value="business-studies">
+                          BUSINESS STUDIES
+                        </option>
+                      </Field>
+                    </div>
+                  )}
+
+                  {/* If You Select HSC-BMT */}
+                  {values.className === "hsc-bmt" && (
+                    <div>
+                      <label className="label mb-2">Trade *</label>
+                      <Field
+                        name="trade"
+                        className="input input-bordered w-full"
+                        as="select"
+                      >
+                        <option value="">Chose your trade</option>
+                        <option value="co">Computer Operation</option>
+                        <option value="hrd">Human Resource Development</option>
+                      </Field>
+                    </div>
+                  )}
+
+                  {/* If you select DEGREE-PASS */}
+                  {values.className === "degree-pass" && (
+                    <div>
+                      <label className="label mb-2">Course *</label>
+                      <Field
+                        name="course"
+                        className="input input-bordered w-full"
+                        as="select"
+                      >
+                        <option value="">Chose your course</option>
+                        <option value="ba">BA</option>
+                        <option value="bss">BSS</option>
+                        <option value="bbs">BBS</option>
+                      </Field>
+                    </div>
+                  )}
+
+                  {/* If you select honours */}
+                  {values.className === "honours" && (
+                    <div>
+                      <label className="label mb-2">Department *</label>
+                      <Field
+                        name="department"
+                        className="input input-bordered w-full"
+                        as="select"
+                      >
+                        <option value="">Chose your department</option>
+                        <option value="bn">BANGLA</option>
+                        <option value="ps">POLITICAL SCIENCE</option>
+                      </Field>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {tab === 1 && (
+              <div
+                className={`tab-content ${
+                  tab === 1 ? "block" : "hidden"
                 } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
               >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -207,21 +319,7 @@ export default function DemoForm() {
                       component="div"
                     />
                   </div>
-                  <div>
-                    <label className="label mb-2">
-                      Guardian Mobile Number *
-                    </label>
-                    <Field
-                      name="guardianMobile"
-                      className="input input-bordered w-full"
-                      placeholder="Guardian Mobile"
-                    />
-                    <ErrorMessage
-                      name="guardianMobile"
-                      className="text-red-500 text-sm"
-                      component="div"
-                    />
-                  </div>
+
                   <div>
                     <label className="label mb-2">
                       Birth Registration Number(17 Digits) *
@@ -336,7 +434,7 @@ export default function DemoForm() {
                       component="div"
                     />
                   </div>
-                  <div className="md:col-span-3">
+                  <div>
                     <label className="label mb-2">District *</label>
                     <Field
                       name="district"
@@ -350,13 +448,105 @@ export default function DemoForm() {
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-base-100 border-base-300 p-6 rounded-xl shadow mt-4">
+                  <div>
+                    <label className="label mb-2">Who is the guardian? *</label>
+                    <Field
+                      className="input input-bordered w-full"
+                      as="select"
+                      name="guardianType"
+                    >
+                      <option value="">Who is the guardian?</option>
+                      <option value="father">Father</option>
+                      <option value="mother">Mother</option>
+                      <option value="other">Other</option>
+                    </Field>
+                    <ErrorMessage
+                      name="guardianType"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+                  <div>
+                    <label className="label mb-2">Guardian Name *</label>
+                    <Field
+                      name="guardianName"
+                      className="input input-bordered w-full"
+                      placeholder="Guardian Name"
+                    />
+                    <ErrorMessage
+                      name="guardianName"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+                  <div>
+                    <label className="label mb-2">
+                      Relationship with student *
+                    </label>
+                    <Field
+                      name="relationshipWith"
+                      className="input input-bordered w-full"
+                      placeholder="Relation"
+                    />
+                    <ErrorMessage
+                      name="relationshipWith"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="label mb-2">
+                      Guardian Mobile Number *
+                    </label>
+                    <Field
+                      name="guardianMobile"
+                      className="input input-bordered w-full"
+                      placeholder="Guardian Mobile"
+                    />
+                    <ErrorMessage
+                      name="guardianMobile"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="label mb-2">Guardian NID *</label>
+                    <Field
+                      name="guardianNID"
+                      className="input input-bordered w-full"
+                      placeholder="Guardian NID"
+                    />
+                    <ErrorMessage
+                      name="guardianNID"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+                  <div className="md:col-span-3">
+                    <label className="label mb-2">
+                      Guardian Address[Village, Post, Up, District] *
+                    </label>
+                    <Field
+                      name="guardianAddress"
+                      className="input input-bordered w-full"
+                      placeholder="Guardian Address"
+                    />
+                    <ErrorMessage
+                      name="guardianAddress"
+                      className="text-red-500 text-sm"
+                      component="div"
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
-            {tab === 1 && (
+            {tab === 2 && (
               <div
                 className={`tab-content ${
-                  tab === 1 ? "block" : "hidden"
+                  tab === 2 ? "block" : "hidden"
                 } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
               >
                 <FieldArray name="previousEducation">
@@ -388,6 +578,16 @@ export default function DemoForm() {
                             className="input input-bordered"
                           />
                           <Field
+                            name={`previousEducation.${idx}.roll`}
+                            placeholder="Roll"
+                            className="input input-bordered"
+                          />
+                          <Field
+                            name={`previousEducation.${idx}.registration`}
+                            placeholder="Registration"
+                            className="input input-bordered"
+                          />
+                          <Field
                             name={`previousEducation.${idx}.authority`}
                             placeholder="Authority"
                             className="input input-bordered"
@@ -395,7 +595,7 @@ export default function DemoForm() {
                           <Field
                             name={`previousEducation.${idx}.resultBase`}
                             placeholder="Result Base"
-                            className="input input-bordered"
+                            className="input input-bordered col-span-2"
                           />
                           <button
                             type="button"
@@ -428,50 +628,117 @@ export default function DemoForm() {
               </div>
             )}
 
-            {tab === 2 && (
-              <div
-                className={`tab-content ${
-                  tab === 2 ? "block" : "hidden"
-                } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
-              >
-                <div>
-                  <label className="label">Blood Group</label>
-                  <Field
-                    as="select"
-                    name="bloodGroup"
-                    className="select select-bordered w-full"
-                  >
-                    <option value="">Select Blood Group</option>
-                    <option value="A+">A+</option>
-                    <option value="O+">O+</option>
-                    <option value="B+">B+</option>
-                  </Field>
-                </div>
-
-                <div>
-                  <label className="label">Date of Birth</label>
-                  <Field
-                    type="date"
-                    name="dateOfBirth"
-                    className="input input-bordered w-full"
-                  />
-                </div>
-
-                <div>
-                  <label className="label">Additional Info</label>
-                  <Field
-                    as="textarea"
-                    name="additionalInfo"
-                    className="textarea textarea-bordered w-full"
-                  />
-                </div>
-              </div>
-            )}
-
             {tab === 3 && (
               <div
                 className={`tab-content ${
                   tab === 3 ? "block" : "hidden"
+                } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
+              >
+                <h3 className="mb-2">
+                  If you add quota add supporting documents on documents upload
+                  section
+                </h3>
+                <FieldArray name="skills">
+                  {({ push, remove }) => (
+                    <div className="space-y-4 mb-4">
+                      {values.skills.map((skill, idx) => (
+                        <div
+                          key={idx}
+                          className="grid md:grid-cols-3 gap-4 border-b pb-2"
+                        >
+                          <Field
+                            name={`skills.${idx}.name`}
+                            placeholder="Skill Name"
+                            className="input input-bordered w-full"
+                          />
+                          <Field
+                            name={`skills.${idx}.description`}
+                            className="input input-bordered w-full"
+                            placeholder="Description"
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-error"
+                            onClick={() => remove(idx)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() =>
+                          push({
+                            name: "",
+                            description: "",
+                          })
+                        }
+                      >
+                        Add Skill
+                      </button>
+                    </div>
+                  )}
+                </FieldArray>
+                <FieldArray name="quotas">
+                  {({ remove, push }) => (
+                    <div className="space-y-4 mb-4">
+                      {values.quotas.map((quota, idx) => (
+                        <div
+                          key={idx}
+                          className="grid md:grid-cols-3 gap-4 border-b pb-2"
+                        >
+                          <Field
+                            name={`quotas.${idx}.name`}
+                            className="input input-bordered w-full"
+                            placeholder="Quota Name"
+                          />
+                          <Field
+                            name={`quotas.${idx}.description`}
+                            className="input input-bordered w-full"
+                            placeholder="Quota Description"
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-error"
+                            onClick={() => remove(idx)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() =>
+                          push({
+                            name: "",
+                            description: "",
+                          })
+                        }
+                      >
+                        Add Quota
+                      </button>
+                    </div>
+                  )}
+                </FieldArray>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-3">
+                    <label className="label">Additional Info</label>
+                    <Field
+                      as="textarea"
+                      name="additionalInfo"
+                      className="textarea textarea-bordered w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {tab === 4 && (
+              <div
+                className={`tab-content ${
+                  tab === 4 ? "block" : "hidden"
                 } bg-base-100 border-base-300 p-6 rounded-xl shadow`}
               >
                 <label className="label font-bold">
