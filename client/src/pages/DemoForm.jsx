@@ -47,6 +47,7 @@ const initialValues = {
   trade: "",
   department: "",
   course: "",
+  subjects: [],
 };
 
 export default function DemoForm() {
@@ -200,6 +201,16 @@ export default function DemoForm() {
                       </Field>
                     </div>
                   )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {/* Subjects is shows according class and trade/course/group/department selection */}
+                  {/* TODO: Implement Latter
+                    LOGICS:
+                    1) CHECK THE DATABASE AVAILABLE GROUPS FOR THIS CLASS AND Other Selection
+                    2) FILTER THE SUBJECT 
+                    3) SHOW THE SUBJECT
+                  */}
                 </div>
               </div>
             )}
